@@ -1,0 +1,23 @@
+server:
+  port: 9002
+
+spring:
+  application:
+    name: item-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/shopping
+    username: shopping
+    password: shopping
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
