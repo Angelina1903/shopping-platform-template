@@ -51,4 +51,10 @@ public class ItemController {
         }
         repo.deleteById(id);
     }
+
+    @GetMapping("/by-account/{accountId}")
+    public List<String> getItemsByAccount(@PathVariable Long accountId) {
+        return List.of("item-A-for-" + accountId,
+                "item-B-for-" + accountId);
+    }
 }
