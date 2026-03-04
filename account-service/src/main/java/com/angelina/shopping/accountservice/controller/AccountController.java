@@ -6,6 +6,9 @@ import com.angelina.shopping.accountservice.repo.AccountRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import com.angelina.shopping.accountservice.exception.AccountNotFoundException;
+import com.angelina.shopping.accountservice.exception.EmailAlreadyExistsException;
+
 
 import java.util.List;
 
@@ -30,25 +33,21 @@ public class AccountController {
 
     @GetMapping("/{id}")
     public Account getById(@PathVariable Long id) {
-        return repo.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "account not found"));
+        return repo.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Account create(@RequestBody CreateAccountRequest req) {
         if (req.email() == null || req.email().isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "email is required");
+            throw new IllegalArgumentException("email is required");
         }
         if (req.displayName() == null || req.displayName().isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "displayName is required");
+            throw new IllegalArgumentException("displayName is required");
         }
-
-        // 需要你 repo 里有 findByEmail
         if (repo.findByEmail(req.email()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "email already exists");
+            throw new EmailAlreadyExistsException(req.email());
         }
-
         return repo.save(new Account(req.email(), req.displayName()));
     }
 
@@ -56,7 +55,7 @@ public class AccountController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         if (!repo.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "account not found");
+            throw new AccountNotFoundException(id);
         }
         repo.deleteById(id);
     }
@@ -64,7 +63,7 @@ public class AccountController {
     @GetMapping("/{id}/items")
     public List<String> getItemsByAccount(@PathVariable Long id) {
         if (!repo.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "account not found");
+            throw new AccountNotFoundException(id);
         }
         return itemClient.getItemsByAccountId(id);
     }
