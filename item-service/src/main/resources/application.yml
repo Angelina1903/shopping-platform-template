@@ -4,17 +4,9 @@ server:
 spring:
   application:
     name: item-service
-
-  datasource:
-    url: jdbc:postgresql://localhost:5433/shopping
-    username: shopping
-    password: shopping
-    driver-class-name: org.postgresql.Driver
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/itemdb
 
 management:
   endpoints:

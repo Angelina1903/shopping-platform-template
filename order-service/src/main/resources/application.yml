@@ -1,0 +1,25 @@
+server:
+  port: 9003
+
+spring:
+  application:
+    name: order-service
+
+  cassandra:
+    contact-points: 127.0.0.1
+    port: 9042
+    local-datacenter: dc1
+    keyspace-name: shopping
+    schema-action: create_if_not_exists
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: order-service
+      auto-offset-reset: earliest
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

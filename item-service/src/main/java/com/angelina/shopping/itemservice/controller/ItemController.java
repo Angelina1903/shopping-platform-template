@@ -26,7 +26,7 @@ public class ItemController {
     }
 
     @GetMapping("/{id}")
-    public Item getById(@PathVariable Long id) {
+    public Item getById(@PathVariable String id) {
         return repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "item not found"));
     }
@@ -40,12 +40,16 @@ public class ItemController {
         if (req.priceCents() == null || req.priceCents() < 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "priceCents must be >= 0");
         }
-        return repo.save(new Item(req.name(), req.priceCents()));
+
+        double price = req.priceCents() / 100.0;
+        int inventory = 0;
+
+        return repo.save(new Item(req.name(), price, inventory));
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable String id) {
         if (!repo.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "item not found");
         }
@@ -54,7 +58,9 @@ public class ItemController {
 
     @GetMapping("/by-account/{accountId}")
     public List<String> getItemsByAccount(@PathVariable Long accountId) {
-        return List.of("item-A-for-" + accountId,
-                "item-B-for-" + accountId);
+        return List.of(
+                "item-A-for-" + accountId,
+                "item-B-for-" + accountId
+        );
     }
 }

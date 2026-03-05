@@ -1,32 +1,58 @@
 package com.angelina.shopping.itemservice.entity;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "items")
+@Document(collection = "items")
 public class Item {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private Integer priceCents;
+    private Double price;
 
-    protected Item() {}
+    private Integer inventory;
 
-    public Item(String name, Integer priceCents) {
-        this.name = name;
-        this.priceCents = priceCents;
+    public Item() {
     }
 
-    public Long getId() { return id; }
-    public String getName() { return name; }
-    public Integer getPriceCents() { return priceCents; }
+    public Item(String name, Double price, Integer inventory) {
+        this.name = name;
+        this.price = price;
+        this.inventory = inventory;
+    }
 
-    public void setName(String name) { this.name = name; }
-    public void setPriceCents(Integer priceCents) { this.priceCents = priceCents; }
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Integer getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(Integer inventory) {
+        this.inventory = inventory;
+    }
 }
