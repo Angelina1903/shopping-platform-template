@@ -10,7 +10,10 @@ spring:
     port: 9042
     local-datacenter: dc1
     keyspace-name: shopping
-    schema-action: create_if_not_exists
+    #schema-action: create_if_not_exists
+    schema-action: none
+    request:
+      timeout: 10s
 
   kafka:
     bootstrap-servers: localhost:9092

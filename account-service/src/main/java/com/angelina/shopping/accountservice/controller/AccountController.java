@@ -2,13 +2,11 @@ package com.angelina.shopping.accountservice.controller;
 
 import com.angelina.shopping.accountservice.client.ItemClient;
 import com.angelina.shopping.accountservice.entity.Account;
+import com.angelina.shopping.accountservice.exception.AccountNotFoundException;
+import com.angelina.shopping.accountservice.exception.EmailAlreadyExistsException;
 import com.angelina.shopping.accountservice.repo.AccountRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import com.angelina.shopping.accountservice.exception.AccountNotFoundException;
-import com.angelina.shopping.accountservice.exception.EmailAlreadyExistsException;
-
 
 import java.util.List;
 
@@ -24,7 +22,23 @@ public class AccountController {
         this.itemClient = itemClient;
     }
 
-    public record CreateAccountRequest(String email, String displayName) {}
+    public record CreateAccountRequest(
+            String email,
+            String displayName,
+            String password,
+            String shippingAddress,
+            String billingAddress,
+            String paymentMethod
+    ) {}
+
+    public record UpdateAccountRequest(
+            String email,
+            String displayName,
+            String password,
+            String shippingAddress,
+            String billingAddress,
+            String paymentMethod
+    ) {}
 
     @GetMapping
     public List<Account> list() {
@@ -45,10 +59,56 @@ public class AccountController {
         if (req.displayName() == null || req.displayName().isBlank()) {
             throw new IllegalArgumentException("displayName is required");
         }
+        if (req.password() == null || req.password().isBlank()) {
+            throw new IllegalArgumentException("password is required");
+        }
         if (repo.findByEmail(req.email()).isPresent()) {
             throw new EmailAlreadyExistsException(req.email());
         }
-        return repo.save(new Account(req.email(), req.displayName()));
+
+        Account a = new Account(req.email(), req.displayName(), req.password());
+        a.setShippingAddress(req.shippingAddress());
+        a.setBillingAddress(req.billingAddress());
+        a.setPaymentMethod(req.paymentMethod());
+
+        return repo.save(a);
+    }
+
+    @PutMapping("/{id}")
+    public Account update(@PathVariable Long id, @RequestBody UpdateAccountRequest req) {
+        Account account = repo.findById(id)
+                .orElseThrow(() -> new AccountNotFoundException(id));
+
+        if (req.email() != null && !req.email().isBlank()) {
+            repo.findByEmail(req.email()).ifPresent(existing -> {
+                if (!existing.getId().equals(id)) {
+                    throw new EmailAlreadyExistsException(req.email());
+                }
+            });
+            account.setEmail(req.email());
+        }
+
+        if (req.displayName() != null && !req.displayName().isBlank()) {
+            account.setDisplayName(req.displayName());
+        }
+
+        if (req.password() != null && !req.password().isBlank()) {
+            account.setPassword(req.password());
+        }
+
+        if (req.shippingAddress() != null) {
+            account.setShippingAddress(req.shippingAddress());
+        }
+
+        if (req.billingAddress() != null) {
+            account.setBillingAddress(req.billingAddress());
+        }
+
+        if (req.paymentMethod() != null) {
+            account.setPaymentMethod(req.paymentMethod());
+        }
+
+        return repo.save(account);
     }
 
     @DeleteMapping("/{id}")

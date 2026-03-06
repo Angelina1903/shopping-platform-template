@@ -16,17 +16,82 @@ public class Account {
     @Column(nullable = false)
     private String displayName;
 
+    // ✅ PDF requirement
+    @Column(nullable = false)
+    private String password;
+
+    // address info
+    @Column(length = 1024)
+    private String shippingAddress;
+
+    @Column(length = 1024)
+    private String billingAddress;
+
+    // payment info (bare minimum)
+    private String paymentMethod;
+
     protected Account() {}
 
-    public Account(String email, String displayName) {
+    // 用于 create account
+    public Account(String email, String displayName, String password) {
         this.email = email;
+        this.displayName = displayName;
+        this.password = password;
+    }
+
+    // ===== getters =====
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public String getBillingAddress() {
+        return billingAddress;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    // ===== setters =====
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
 
-    public Long getId() { return id; }
-    public String getEmail() { return email; }
-    public String getDisplayName() { return displayName; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-    public void setEmail(String email) { this.email = email; }
-    public void setDisplayName(String displayName) { this.displayName = displayName; }
+    public void setShippingAddress(String shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
+
+    public void setBillingAddress(String billingAddress) {
+        this.billingAddress = billingAddress;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
 }

@@ -15,6 +15,11 @@ public class Item {
 
     private Integer inventory;
 
+    // metadata fields required by project spec
+    private String upc;
+
+    private String imageUrl;
+
     public Item() {
     }
 
@@ -54,5 +59,21 @@ public class Item {
 
     public void setInventory(Integer inventory) {
         this.inventory = inventory;
+    }
+
+    public String getUpc() {
+        return upc;
+    }
+
+    public void setUpc(String upc) {
+        this.upc = upc;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
