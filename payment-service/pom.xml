@@ -49,7 +49,6 @@
 
     <build>
         <plugins>
-            <!-- 打包可执行 jar -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

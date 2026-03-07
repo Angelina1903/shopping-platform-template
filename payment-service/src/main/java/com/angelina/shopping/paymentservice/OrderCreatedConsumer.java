@@ -36,10 +36,8 @@ public class OrderCreatedConsumer {
 
             UUID orderId = UUID.fromString(orderIdStr);
 
-            // 创建或更新 payment（幂等）
             PaymentController.upsertPaidByOrderId(orderId, totalCents);
 
-            // 发送 payment processed event
             kafka.send(PAYMENT_PROCESSED_TOPIC, orderIdStr, orderIdStr);
 
             System.out.println("✅ Payment processed for order: " + orderIdStr);

@@ -16,7 +16,6 @@ public class Account {
     @Column(nullable = false)
     private String displayName;
 
-    // ✅ PDF requirement
     @Column(nullable = false)
     private String password;
 
@@ -32,7 +31,7 @@ public class Account {
 
     protected Account() {}
 
-    // 用于 create account
+    // create account
     public Account(String email, String displayName, String password) {
         this.email = email;
         this.displayName = displayName;

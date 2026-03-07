@@ -29,7 +29,6 @@ public class AuthController {
         }
     }
 
-    // ✅ 给 order-service 用：带 token 来问 “你是谁”
     @GetMapping("/validate")
     public ValidateResponse validate(@RequestHeader(name = "Authorization", required = false) String authorization) {
         String token = extractBearerToken(authorization);

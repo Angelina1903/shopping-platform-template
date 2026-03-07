@@ -13,7 +13,6 @@ public class AuthService {
 
     private final AccountRepository repo;
 
-    // token -> accountId（最小实现：内存存储；重启会丢，项目够用）
     private final Map<String, Long> tokenToAccountId = new ConcurrentHashMap<>();
 
     public AuthService(AccountRepository repo) {
@@ -24,7 +23,6 @@ public class AuthService {
         Account a = repo.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("invalid email/password"));
 
-        // ✅ 最小实现：明文对比（生产环境绝对要 hash）
         if (a.getPassword() == null || !a.getPassword().equals(password)) {
             throw new IllegalArgumentException("invalid email/password");
         }

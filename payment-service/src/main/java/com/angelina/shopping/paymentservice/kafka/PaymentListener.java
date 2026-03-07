@@ -22,7 +22,6 @@ public class PaymentListener {
         System.out.println("💰 Payment service received order event:");
         System.out.println(message);
 
-        // 从 JSON 里简单提取 orderId（最小实现）
         String orderId = message.replaceAll(".*\"orderId\"\\s*:\\s*\"([^\"]+)\".*", "$1");
 
         kafka.send(TOPIC_PAYMENT_PROCESSED, orderId, orderId);
